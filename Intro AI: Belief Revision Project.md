@@ -62,7 +62,7 @@ These symbols are used in the documentation and test suite to define the rules o
 | Concept | Mathematical Symbol | Project Usage | Python Method | Syntax Example |
 | :--- | :---: | :--- | :--- | :--- |
 
-| **Element of** | $\in$ | $\phi \in B$ (Formula is a current belief) | __contains__(self, item) | `p in B`
+| **Element of** | $\in$ | $\phi \in B$ (Formula is a current belief) | __contains__(self, item) | `p in B` |
 | **Subset of** | $\subseteq$ | $B' \subseteq B$ (Comparing belief base states) | __le__(self, other) | `B1' <= B2` |
 | **Equivalence** | $\equiv$ | $\phi \equiv \psi$ (Logical equivalence for the Extensionality postulate) | __eq__(self, other) | `p == q` |
 | **Entailment** | $\models$ | $B \models \phi$ (The inference engine proves the formula) | ? | ? |
