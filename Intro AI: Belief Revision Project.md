@@ -60,7 +60,8 @@ These symbols represent the core nodes within our Abstract Syntax Tree used to b
 These symbols are used in the documentation and test suite to define the rules of the Belief Base ($B$), the inference engine, and the AGM postulates.
 
 | Concept | Mathematical Symbol | Project Usage | Python Method | Syntax Example |
-| :--- | :---: | :--- |
+| :--- | :---: | :--- | :--- | :--- |
+
 | **Element of** | $\in$ | $\phi \in B$ (Formula is a current belief) | __contains__(self, item) | `p in B`
 | **Subset of** | $\subseteq$ | $B' \subseteq B$ (Comparing belief base states) | __le__(self, other) | `B1' <= B2` |
 | **Equivalence** | $\equiv$ | $\phi \equiv \psi$ (Logical equivalence for the Extensionality postulate) | __eq__(self, other) | `p == q` |
