@@ -35,3 +35,22 @@ The output should be the resulting/new belief base.
 3. design and implementation a revision method (lexicographic or minimal) of the plausibility
 order.
 The output should be the resulting/new plausibility order.
+
+
+
+Abstract Syntax Tree (AST)
+NOT: $\neg$
+AND: $\land$
+OR: $\lor$
+Implication (IF... THEN...): $\implies$
+Biconditional (IFF): $\iff$
+
+Element of: $\in$
+Subset of: $\subseteq$
+
+Equivalence: $\equiv$
+True: $\top$
+False: $\bot$
+
+
+
