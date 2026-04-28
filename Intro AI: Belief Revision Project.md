@@ -61,15 +61,13 @@ These symbols are used in the documentation and test suite to define the rules o
 
 | Concept | Mathematical Symbol | Project Usage | Python Method | Syntax Example |
 | :--- | :---: | :--- | :--- | :--- |
-
-| **Element of** | $\in$ | $\phi \in B$ (Formula is a current belief) | __contains__(self, item) | `p in B` |
-| **Subset of** | $\subseteq$ | $B' \subseteq B$ (Comparing belief base states) | __le__(self, other) | `B1' <= B2` |
-| **Equivalence** | $\equiv$ | $\phi \equiv \psi$ (Logical equivalence for the Extensionality postulate) | __eq__(self, other) | `p == q` |
-| **Entailment** | $\models$ | $B \models \phi$ (The inference engine proves the formula) | ? | ? |
-| **Expansion** | $+$ | $B + \phi$ (Blindly adding a belief) | __add__(self, other) | `B + p` |
-| **Contraction** | $-$ | $B - \phi$ (Removing a belief and resolving dependencies) | __sub__(self, other) | `B - p` |
-| **Revision** | $*$ | $B * \phi$ (Adding a belief while maintaining consistency) | __mul__(self, other) | `B * p` |
-
+| **Element of** | $\in$ | $\phi \in B$ (Formula is a current belief) | `__contains__(self, formula)` | `p in B` |
+| **Subset of** | $\subseteq$ | $B' \subseteq B$ (Comparing belief base states) | `__le__(self, other_base)` | `B1 <= B2` |
+| **Equivalence** | $\equiv$ | $\phi \equiv \psi$ (Logical equivalence for the Extensionality postulate) | `is_equivalent(phi, psi)` | `is_equivalent(p, q)` |
+| **Entailment** | $\models$ | $B \models \phi$ (The inference engine proves the formula) | `entails(self, formula)` | `B.entails(p)` |
+| **Expansion** | $+$ | $B + \phi$ (Blindly adding a belief) | `__add__(self, formula)` | `B + p` |
+| **Contraction** | $-$ | $B - \phi$ (Removing a belief and resolving dependencies) | `__sub__(self, formula)` | `B - p` |
+| **Revision** | $*$ | $B * \phi$ (Adding a belief while maintaining consistency) | `__mul__(self, formula)` | `B * p` |
 
 
 
