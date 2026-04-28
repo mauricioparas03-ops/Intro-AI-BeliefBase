@@ -37,20 +37,37 @@ order.
 The output should be the resulting/new plausibility order.
 
 
+### Abstract Syntax Tree (AST) & Logical Symbology
 
-Abstract Syntax Tree (AST)
-NOT: $\neg$
-AND: $\land$
-OR: $\lor$
-Implication (IF... THEN...): $\implies$
-Biconditional (IFF): $\iff$
+The following tables define the formal mathematical symbols used to represent our propositional logic framework, alongside their corresponding programmatic implementations in the AST.
 
-Element of: $\in$
-Subset of: $\subseteq$
+#### 1. Logical Connectives (AST Nodes)
 
-Equivalence: $\equiv$
-True: $\top$
-False: $\bot$
+These symbols represent the core nodes within our Abstract Syntax Tree used to build propositional formulas.
+
+| Concept | Mathematical Symbol | Python Operator Override | AST Node Class | Syntax Example |
+| :--- | :---: | :---: | :--- | :--- |
+| **NOT** | $\neg$ | `~` | `Not` | `~p` |
+| **AND** | $\land$ | `&` | `And` | `p & q` |
+| **OR** | $\lor$ | `|` | `Or` | `p | q` |
+| **Implication** | $\implies$ | `>>` | `Implies` | `p >> q` |
+| **Biconditional**| $\iff$ | `==` | `Biconditional`| `p == q` |
+| **True (Tautology)** | $\top$ | `True` | `Top` | $\top$ |
+| **False (Contradiction)** | $\bot$ | `False` | `Bot` | $\bot$ |
+
+#### 2. Set Theory & Belief Operations
+
+These symbols are used in the documentation and test suite to define the rules of the Belief Base ($B$), the inference engine, and the AGM postulates.
+
+| Concept | Mathematical Symbol | Project Usage |
+| :--- | :---: | :--- |
+| **Element of** | $\in$ | $\phi \in B$ (Formula is a current belief) |
+| **Subset of** | $\subseteq$ | $B' \subseteq B$ (Comparing belief base states) |
+| **Equivalence** | $\equiv$ | $\phi \equiv \psi$ (Logical equivalence for the Extensionality postulate) |
+| **Entailment** | $\models$ | $B \models \phi$ (The inference engine proves the formula) |
+| **Expansion** | $+$ | $B + \phi$ (Blindly adding a belief) |
+| **Contraction** | $-$ | $B - \phi$ (Removing a belief and resolving dependencies) |
+| **Revision** | $*$ | $B * \phi$ (Adding a belief while maintaining consistency) |
 
 
 
