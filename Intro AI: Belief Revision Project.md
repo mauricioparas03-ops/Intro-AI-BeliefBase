@@ -1,4 +1,4 @@
-Intro AI: Belief Revision Project
+Intro AI Belief Revision Project
 
 Task implement a belief revision agent
 
