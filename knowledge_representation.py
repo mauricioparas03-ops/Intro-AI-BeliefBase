@@ -75,10 +75,7 @@ CHECKLIST (what should work after this file):
     [ ] __le__ correctly checks if one BeliefBase is a subset of another
 """
 
-
-# ─────────────────────────────────────────────
 # Step 1: Base Class
-# ─────────────────────────────────────────────
 
 class Formula(ABC):
     """
@@ -112,9 +109,7 @@ class Formula(ABC):
         pass
 
 
-# ─────────────────────────────────────────────
 # Step 2: Leaf Nodes
-# ─────────────────────────────────────────────
 
 class Atom(Formula):
     """
@@ -148,9 +143,7 @@ class Bot(Formula):
         return '⊥'
 
 
-# ─────────────────────────────────────────────
 # Step 3: Compound Nodes
-# ─────────────────────────────────────────────
 
 class Not(Formula):
     """
@@ -224,9 +217,7 @@ class Biconditional(Formula):
         return f'({repr(self.left)} ↔ {repr(self.right)})'
 
 
-# ─────────────────────────────────────────────
 # Step 4: Biconditional helper
-# ─────────────────────────────────────────────
 
 def Bic(p: Formula, q: Formula) -> Biconditional:
     """
@@ -237,9 +228,7 @@ def Bic(p: Formula, q: Formula) -> Biconditional:
     return Biconditional(p, q)
 
 
-# ─────────────────────────────────────────────
 # Step 5: BeliefBase
-# ─────────────────────────────────────────────
 
 class BeliefBase:
     """

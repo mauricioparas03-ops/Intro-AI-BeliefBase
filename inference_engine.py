@@ -216,51 +216,51 @@ if __name__ == "__main__":
     print("Does B entail q?")
     print(entails(B, q))  # should be True
 
-#Test 1 — Non-entailment
-p = Atom('p')
-q = Atom('q')
+# #Test 1 — Non-entailment
+# p = Atom('p')
+# q = Atom('q')
 
-B = BeliefBase()
-B.add(p)
+# B = BeliefBase()
+# B.add(p)
 
-print(entails(B, q))  # should be False
+# print(entails(B, q))  # should be False
 
-#Test 2 — Simple contradiction
-p = Atom('p')
+# #Test 2 — Simple contradiction
+# p = Atom('p')
 
-B = BeliefBase()
-B.add(p)
-B.add(~p)
+# B = BeliefBase()
+# B.add(p)
+# B.add(~p)
 
-print(is_consistent(B))  # should be False
+# print(is_consistent(B))  # should be False
 
-#Test 3 — Chain reasoning
-p = Atom('p')
-q = Atom('q')
-r = Atom('r')
+# #Test 3 — Chain reasoning
+# p = Atom('p')
+# q = Atom('q')
+# r = Atom('r')
 
-B = BeliefBase()
-B.add(p)
-B.add(p >> q)
-B.add(q >> r)
+# B = BeliefBase()
+# B.add(p)
+# B.add(p >> q)
+# B.add(q >> r)
 
-print(entails(B, r))  # should be True
+# print(entails(B, r))  # should be True
 
-#Test 4 — OR reasoning
-p = Atom('p')
-q = Atom('q')
+# #Test 4 — OR reasoning
+# p = Atom('p')
+# q = Atom('q')
 
-B = BeliefBase()
-B.add(p | q)
-B.add(~p)
+# B = BeliefBase()
+# B.add(p | q)
+# B.add(~p)
 
-print(entails(B, q))  # should be True
+# print(entails(B, q))  # should be True
 
-#Test 5 — No explosion unless contradiction
-p = Atom('p')
-q = Atom('q')
+# #Test 5 — No explosion unless contradiction
+# p = Atom('p')
+# q = Atom('q')
 
-B = BeliefBase()
-B.add(p | q)
+# B = BeliefBase()
+# B.add(p | q)
 
-print(entails(B, p))  # should be False
+# print(entails(B, p))  # should be False
