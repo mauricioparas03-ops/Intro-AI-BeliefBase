@@ -22,11 +22,11 @@ Because the inference engine was built from scratch, **no external Python packag
 ---
 
 ## 1. Jupyter Notebook Demo - Recommended
-For the easiest grading experience, we have included an interactive Jupyter Notebook (`demo.ipynb`). You can open and run this notebook to step through the logical entailment and partial meet contraction examples.
+We have included an interactive Jupyter Notebook (`demo.ipynb`) to easily test the system. You can open and run this notebook to step through the logical entailment and partial meet contraction examples.
 
 ---
 
 ## 2. Automated Postulate Testing
 To verify the engine with the AGM postulates, please run the automated test suite from the root directory:
 ```bash
-python3 test_suite.py
+python test_suite.py
