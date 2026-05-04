@@ -11,71 +11,34 @@ from abc import ABC, abstractmethod
 knowledge_representation.py
 ============================
 
-PURPOSE:
-    This file is the data layer of the belief revision engine.
-    It defines how propositional logic formulas are represented in memory
-    (as Abstract Syntax Trees), and how a collection of beliefs is stored
-    (as a BeliefBase). Nothing intelligent happens here — no reasoning,
-    no entailment, no revision. It is purely structure.
+This defines how formulas are built and stored.
 
-WHAT IS AN AST?
-    An Abstract Syntax Tree is a tree structure where:
-    - Leaf nodes are the simplest building blocks: Atoms (p, q, r...), Top (⊤), Bot (⊥)
-    - Compound nodes combine formulas using logical connectives: Not, And, Or, Implies, Biconditional
-    - Example: "p → q" becomes Implies(Atom('p'), Atom('q'))
-    - Example: "p ∧ ¬q" becomes And(Atom('p'), Not(Atom('q')))
+SYMBOLS AND WHAT THEY MEAN:
+    Math    Code        Meaning
+    ────────────────────────────────────────────────────────
+    ⊤       Top()       always true
+    ⊥       Bot()       always false
+    ¬p      ~p          flips true to false and vice versa
+    ∧       p & q       true only if both sides are true
+    ∨       p | q       true if at least one side is true
+    →       p >> q      false only if left is true and right is false
+    ↔       Bic(p, q)   true only if both sides have the same value
 
-    The tree structure means every formula can be recursively decomposed,
-    which is essential for CNF conversion and resolution in inference_engine.py.
-
-OPERATOR OVERLOADING:
-    Python allows us to redefine what symbols like &, |, ~, >> do for our classes.
-    We use this so formulas can be written naturally:
-        p & q       instead of     And(p, q)
-        p | q       instead of     Or(p, q)
-        ~p          instead of     Not(p)
-        p >> q      instead of     Implies(p, q)
-    Python has no <=> operator, so Biconditional uses a helper function Bic(p, q).
-
-EQUALITY AND HASHING:
-    Two formulas are equal if their string representations are equal.
-    This means And(Atom('p'), Atom('q')) == And(Atom('p'), Atom('q')) is True.
-    Hashing is also based on repr() so formulas can be stored in Python sets and dicts.
-    This is important for:
-        - Checking if a formula is in the BeliefBase (syntactic membership)
-        - Computing remainder sets in revision_engine.py (which uses set operations)
+EQUALITY:
+    Two formulas are equal if they look the same as text.
+    And(p, q) == And(p, q) is True.
 
 BELIEF BASE:
-    The BeliefBase stores (formula, priority) pairs in a list.
-    Priority is an integer assigned when a formula is added:
-        - Higher priority = more entrenched = harder to remove during contraction
-        - Lower priority = less important = removed first during contraction
-    This ordering is what makes our contraction a *partial meet* contraction —
-    we use priority to select which remainder sets to keep.
+    A list of (formula, priority) pairs.
+    Priority is a number you assign when adding a belief:
+        higher number = more important = last to be removed
+        lower number  = less important = first to be removed
 
-    Key distinction:
-        - "p in B" is a SYNTACTIC check — is this exact formula stored?
-        - "B.entails(p)" is a SEMANTIC check — does B logically imply p?
-          That second operation is NOT defined here. It lives in inference_engine.py.
-
-FILE DEPENDENCIES:
-    - This file imports nothing from our project.
-    - inference_engine.py imports Formula, Atom, Not, And, Or, Implies, Biconditional, BeliefBase
-    - revision_engine.py imports BeliefBase and formula classes
-    - test_suite.py imports everything
-
-CHECKLIST (what should work after this file):
-    [ ] Atom('p') creates a leaf node with name 'p'
-    [ ] p & q, p | q, ~p, p >> q, Bic(p,q) all build correct AST nodes
-    [ ] repr() of each node prints a readable formula
-    [ ] Two Atom('p') instances are equal and hash the same
-    [ ] BeliefBase.add() does not duplicate formulas, updates priority instead
-    [ ] copy() produces an independent clone — mutating one does not affect the other
-    [ ] get_formulas() returns formulas sorted by priority ascending (lowest first)
-    [ ] __le__ correctly checks if one BeliefBase is a subset of another
+The comments and documentation in this file were written with the help of AI
+to make the reasoning and design decisions easier to follow for everyone in the group.
 """
 
-# Step 1: Base Class
+# Base Class
 
 class Formula(ABC):
     """
@@ -109,11 +72,11 @@ class Formula(ABC):
         pass
 
 
-# Step 2: Leaf Nodes
+# Leaf Nodes
 
 class Atom(Formula):
     """
-    A propositional variable — the simplest formula.
+    the simplest formula.
     Examples: p, q, r, rain, sunny.
     Stores just a string name. Has no children.
     """
@@ -143,7 +106,7 @@ class Bot(Formula):
         return '⊥'
 
 
-# Step 3: Compound Nodes
+# Compound Nodes
 
 class Not(Formula):
     """
@@ -238,18 +201,8 @@ class BeliefBase:
         A list of (formula, priority) tuples.
         Priority is an integer: higher = more entrenched = removed last during contraction.
 
-    PRIORITY AND CONTRACTION:
-        When we contract the belief base (remove a belief and its consequences),
-        we need to decide which formulas to keep. We do this by computing
-        'remainder sets' — maximal subsets that do not entail the removed formula.
-        The selection function then picks the remainder sets that retain
-        the highest priority formulas. This is what makes it a *partial meet* contraction.
-
-    SYNTACTIC vs SEMANTIC membership:
-        'p in B' checks if p is literally stored in the base (syntactic).
-        'B entails p' checks if p logically follows from B (semantic).
-        Only the syntactic check is defined here.
-        The semantic check is in inference_engine.py.
+    Only the syntactic check is defined here.
+    The semantic check is in inference_engine.py.
     """
 
     def __init__(self):
