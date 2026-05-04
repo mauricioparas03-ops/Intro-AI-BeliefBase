@@ -28,14 +28,6 @@ EQUALITY:
     Two formulas are equal if they look the same as text.
     And(p, q) == And(p, q) is True.
 
-BELIEF BASE:
-    A list of (formula, priority) pairs.
-    Priority is a number you assign when adding a belief:
-        higher number = more important = last to be removed
-        lower number  = less important = first to be removed
-
-The comments and documentation in this file were written with the help of AI
-to make the reasoning and design decisions easier to follow for everyone in the group.
 """
 
 # Base Class
@@ -43,10 +35,6 @@ to make the reasoning and design decisions easier to follow for everyone in the 
 class Formula(ABC):
     """
     Abstract base class for all propositional logic formulas.
-
-    Every node in the AST inherits from this class.
-    Defines operator overloads so formulas can be written naturally,
-    and defines equality/hashing based on string representation.
     """
 
     def __and__(self, other):
@@ -75,11 +63,7 @@ class Formula(ABC):
 # Leaf Nodes
 
 class Atom(Formula):
-    """
-    the simplest formula.
-    Examples: p, q, r, rain, sunny.
-    Stores just a string name. Has no children.
-    """
+
     def __init__(self, name: str):
         self.name = name
 
@@ -90,7 +74,6 @@ class Atom(Formula):
 class Top(Formula):
     """
     Represents ⊤ (Tautology / always True).
-    Used as a logical constant. Has no children.
     """
     def __repr__(self):
         return '⊤'
@@ -99,8 +82,6 @@ class Top(Formula):
 class Bot(Formula):
     """
     Represents ⊥ (Contradiction / always False).
-    Used as a logical constant. Has no children.
-    A belief base that entails ⊥ is inconsistent.
     """
     def __repr__(self):
         return '⊥'
@@ -110,9 +91,7 @@ class Bot(Formula):
 
 class Not(Formula):
     """
-    Logical negation: ¬φ
-    Has one child: the formula being negated.
-    Example: Not(Atom('p')) represents ¬p
+    Logical negation 
     """
     def __init__(self, formula: Formula):
         self.formula = formula
@@ -123,9 +102,7 @@ class Not(Formula):
 
 class And(Formula):
     """
-    Logical conjunction: φ ∧ ψ
-    Has two children: left and right.
-    Example: And(Atom('p'), Atom('q')) represents (p ∧ q)
+    (p ∧ q)
     """
     def __init__(self, left: Formula, right: Formula):
         self.left = left
@@ -137,9 +114,7 @@ class And(Formula):
 
 class Or(Formula):
     """
-    Logical disjunction: φ ∨ ψ
-    Has two children: left and right.
-    Example: Or(Atom('p'), Atom('q')) represents (p ∨ q)
+     (p ∨ q)
     """
     def __init__(self, left: Formula, right: Formula):
         self.left = left
@@ -151,10 +126,7 @@ class Or(Formula):
 
 class Implies(Formula):
     """
-    Logical implication: φ → ψ
-    Has two children: left (antecedent) and right (consequent).
-    Example: Implies(Atom('p'), Atom('q')) represents (p → q)
-    During CNF conversion this gets eliminated: (p → q) becomes (¬p ∨ q)
+    (p → q)
     """
     def __init__(self, left: Formula, right: Formula):
         self.left = left
@@ -166,10 +138,6 @@ class Implies(Formula):
 
 class Biconditional(Formula):
     """
-    Logical biconditional: φ ↔ ψ
-    Has two children: left and right.
-    Example: Biconditional(Atom('p'), Atom('q')) represents (p ↔ q)
-    During CNF conversion this gets eliminated first:
         (p ↔ q) becomes ((p → q) ∧ (q → p))
     """
     def __init__(self, left: Formula, right: Formula):
@@ -184,9 +152,7 @@ class Biconditional(Formula):
 
 def Bic(p: Formula, q: Formula) -> Biconditional:
     """
-    Convenience function for Biconditional.
-    Python has no <=> operator so we cannot overload it.
-    Use Bic(p, q) instead of Biconditional(p, q) for cleaner syntax.
+    Used to create a biconditional formula from two formulas p and q.
     """
     return Biconditional(p, q)
 
@@ -194,16 +160,6 @@ def Bic(p: Formula, q: Formula) -> Biconditional:
 # Step 5: BeliefBase
 
 class BeliefBase:
-    """
-    The agent's belief base — a prioritised collection of propositional formulas.
-
-    INTERNAL STRUCTURE:
-        A list of (formula, priority) tuples.
-        Priority is an integer: higher = more entrenched = removed last during contraction.
-
-    Only the syntactic check is defined here.
-    The semantic check is in inference_engine.py.
-    """
 
     def __init__(self):
         self._beliefs: list[tuple[Formula, int]] = []
@@ -221,8 +177,8 @@ class BeliefBase:
 
     def __contains__(self, formula: Formula) -> bool:
         """
-        Syntactic membership check: is this exact formula stored in the base?
-        Uses Formula.__eq__ which compares string representations.
+        is this exact formula stored in the base?
+        Uses Formula.__eq__ which compares strings
         """
         return any(f == formula for f, _ in self._beliefs)
 
@@ -239,23 +195,18 @@ class BeliefBase:
         return [f for f, _ in sorted(self._beliefs, key=lambda x: x[1])]
 
     def get_with_priorities(self) -> list[tuple[Formula, int]]:
-        """Return raw (formula, priority) tuples sorted by priority ascending."""
+        """Return raw (formula, priority) tuples sorted by priority ascending.
+        Might not be used but it is nice to have for debugging."""
         return sorted(self._beliefs, key=lambda x: x[1])
 
     def __le__(self, other: 'BeliefBase') -> bool:
         """
-        Subset check: is every formula in self also in other?
-        Used to test the Inclusion postulate: B * φ ⊆ B + φ
+        Is every formula in self also in other?
         """
         return all(f in other for f in self)
 
     def copy(self) -> 'BeliefBase':
-        """
-        Return an independent clone of this belief base.
-        Mutating the copy does not affect the original.
-        Essential for remainder set computation in revision_engine.py,
-        where we trial-remove formulas without touching the real base.
-        """
+        
         new_base = BeliefBase()
         new_base._beliefs = self._beliefs.copy()
         return new_base
